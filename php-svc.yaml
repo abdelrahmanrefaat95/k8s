@@ -1,0 +1,13 @@
+# php-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: php
+spec:
+  selector:
+    app: php  # This should match the label in your php-deployment.yaml
+  ports:
+    - name: fpm  # Name the port (optional but recommended)
+      port: 9000 # The port that Nginx will use to connect (usually 9000 for PHP-FPM)
+      targetPort: 9000  # The port PHP-FPM is actually listening on inside the container
+

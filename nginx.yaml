@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest  # Use the official Nginx image
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: php-src    
+              mountPath: /var/www/html
+            - name: nginx-config   # Mount the configuration from the ConfigMap
+              mountPath: /etc/nginx/conf.d/
+      volumes:
+        - name: php-src       
+          persistentVolumeClaim:
+            claimName: php-src-pvc
+        - name: nginx-config
+          hostPath:
+            path: /home/abdelrahman/nginx-conf/
+            type: Directory
+

@@ -1,0 +1,43 @@
+# php-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: php
+  template:
+    metadata:
+      labels:
+        app: php
+    spec:
+      containers:
+        - name: php
+          image: abdelrahmanrefaat95x/php:latest
+          volumeMounts:
+            - name: php-src
+              mountPath: /var/www/html
+          envFrom:
+            - configMapRef:
+                name: php-config
+
+      volumes:
+        - name: php-src
+          persistentVolumeClaim:
+            claimName: php-src-pvc
+
+---
+# php-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: php-config
+data:
+  DB_HOST: db
+  DB_USER: abdelrahman
+  DB_PASSWORD: "123456789"
+  DB_NAME: demo
+  MYSQL_TABLE: users
+
